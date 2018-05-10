@@ -88,6 +88,10 @@ fi
 
 # STAGE 2 {{{
 if echo ${stage} | grep -q 2; then
+    echo "###########################################################"
+    echo "#                     EVALUATION STEP                     #"
+    echo "###########################################################"
+    echo "Start evaluation."
     ${cuda_cmd} "${expdir}/test.log" \
         test.py \
             --gpu 0 \
