@@ -6,3 +6,5 @@ dataset/KITTI
 venv/
 egs/*/*/dump
 egs/*/*/exp
+egs/*/*/data
+slurm-*.out
