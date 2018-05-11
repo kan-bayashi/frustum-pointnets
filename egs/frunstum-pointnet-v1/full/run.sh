@@ -5,7 +5,7 @@
 
 stage=012
 model=frustum_pointnets_v1
-train=./conf/train.txt
+train=./conf/train-shuffle.txt
 valid=./conf/val.txt
 rgb_valid=./conf/rgb_detection_val.txt
 ratio=1.0
@@ -29,14 +29,15 @@ if echo ${stage} | grep -q 0; then
     if [ ! -e data/${ratio} ]; then
         mkdir -p data/${ratio}
     fi
+    # get number of subsets
     n_all=$(wc -l ${train} | awk '{print $1}')
     n_subset=$(echo "${n_all} * ${ratio}" | bc)
     n_subset=${n_subset%.*}
-    sort -R ${train} | head -n "${n_subset}" | sort > data/${ratio}/train.txt
+    head -n "${n_subset}" ${train} | sort > data/${ratio}/train.txt
     cp ${valid} data/${ratio}/val.txt
     cp ${rgb_valid} data/${ratio}/rgb_detection_val.txt
-    echo "number of training data = $(wc -l ${train})"
-    echo "number of validation data = $(wc -l ${valid})"
+    echo "number of training data = $(wc -l ${train} | awk '{print $1}')"
+    echo "number of validation data = $(wc -l ${valid} | awk '{print $1}')"
     train=data/${ratio}/train.txt
     valid=data/${ratio}/val.txt
     rgb_valid=data/${ratio}/rgb_detection_val.txt
@@ -108,5 +109,9 @@ if echo ${stage} | grep -q 2; then
         evaluate_object_3d_offline \
             "$PRJ_ROOT/dataset/KITTI/object/training/label_2" \
             "${expdir}/results_val_from_rgb_detection"
+
+    # summarize results
+    grep AP "${expdir}/results_val_from_rgb_detection/kitti_eval.log" \
+        > "${expdir}/results_val_from_rgb_detection/summary.txt"
 fi
 # }}}
