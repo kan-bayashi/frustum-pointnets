@@ -64,9 +64,7 @@ TEST_DATASET = provider.FrustumDataset(npoints=NUM_POINT, split='val',
 
 
 def get_session_and_ops(batch_size, num_point):
-    ''' Define model graph, load model parameters,
-    create session and return session handle and tensors
-    '''
+    '''Define model graph, load model parameters, create session and return session handle and tensors'''
     with tf.Graph().as_default():
         with tf.device('/gpu:'+str(GPU_INDEX)):
             pointclouds_pl, one_hot_vec_pl, labels_pl, centers_pl, \
